@@ -1,5 +1,5 @@
-import { Providers } from './providers';
+import IndexRoute from '@/routes';
 
 export default function App() {
-    return <Providers />;
+    return <IndexRoute />;
 }

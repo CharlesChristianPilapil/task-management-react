@@ -9,13 +9,6 @@ export const authApi = {
             password,
         }),
 
-    register: (name: string, email: string, password: string) =>
-        laravelClient.post<ApiResponse<{ user: User; token: AuthTokens }>>('/auth/register', {
-            name,
-            email,
-            password,
-        }),
-
     me: () => laravelClient.get<ApiResponse<User>>('/auth/me'),
 
     logout: () => laravelClient.post<ApiResponse<null>>('/auth/logout'),
