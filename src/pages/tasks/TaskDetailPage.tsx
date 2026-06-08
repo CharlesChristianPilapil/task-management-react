@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ROUTES } from '@/config/routes';
+import { ROUTES, teamTasksPath } from '@/config/routes';
 import { SectionState } from '@/features/dashboard';
 import {
     TaskDetailForm,
@@ -96,9 +96,14 @@ export function TaskDetailPage() {
         try {
             await deleteTask(task.id).unwrap();
             toast.success('Task deleted', { id: toastId });
-            navigate(ROUTES.TASKS);
+            if (task?.team_id) {
+                navigate(teamTasksPath(task.team_id));
+            } else {
+                navigate(ROUTES.DASHBOARD);
+            }
         } catch (err) {
             toast.error(getApiErrorMessage(err, 'Failed to delete task.'), { id: toastId });
+            throw err;
         }
     };
 
@@ -109,7 +114,14 @@ export function TaskDetailPage() {
                     <h1 className="text-2xl font-semibold tracking-tight">Task detail</h1>
                     <p className="text-sm text-muted-foreground">View and edit this task.</p>
                 </div>
-                <Button variant="outline" onClick={() => navigate(ROUTES.TASKS)}>
+                <Button
+                    variant="outline"
+                    onClick={() =>
+                        task?.team_id
+                            ? navigate(teamTasksPath(task.team_id))
+                            : navigate(ROUTES.DASHBOARD)
+                    }
+                >
                     Back to tasks
                 </Button>
             </div>

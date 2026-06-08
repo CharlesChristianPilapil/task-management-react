@@ -12,7 +12,7 @@ export const userApi = {
         laravelClient.post<ApiResponse<User>>('/users', payload),
 
     update: (userId: number, payload: UpdateUserPayload) =>
-        laravelClient.put<ApiResponse<User>>(`/users/${userId}`, payload),
+        laravelClient.patch<ApiResponse<User>>(`/users/${userId}`, payload),
 
     toggleStatus: (userId: number) =>
         laravelClient.patch<ApiResponse<User>>(`/users/${userId}/status`),

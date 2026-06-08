@@ -18,4 +18,9 @@ export {
     useRemoveTeamMemberMutation,
 } from './_service';
 export type { Team, TeamListParams, TeamListResult, TeamMember } from './_types';
-export { createTeamTableColumns } from './_utils';
+export {
+    canAccessTeamManagement,
+    canManageTeamMembers,
+    canViewTeam,
+    createTeamTableColumns,
+} from './_utils';

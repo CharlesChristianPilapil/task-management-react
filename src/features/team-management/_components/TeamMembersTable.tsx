@@ -2,6 +2,7 @@ import { Trash2 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { DataTable } from '@/components/ui/data-table';
 import type { DataTableColumn } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
@@ -22,6 +23,7 @@ type TeamMembersTableProps = {
     removingUserId?: number | null;
     onRemoveStart?: (userId: number) => void;
     onRemoveEnd?: () => void;
+    isLoading?: boolean;
 };
 
 export function TeamMembersTable({
@@ -31,8 +33,10 @@ export function TeamMembersTable({
     removingUserId = null,
     onRemoveStart,
     onRemoveEnd,
+    isLoading = false,
 }: TeamMembersTableProps) {
     const [page, setPage] = useState(1);
+    const [pendingMember, setPendingMember] = useState<TeamMember | null>(null);
     const [removeMember, { isLoading: isRemoving }] = useRemoveTeamMemberMutation();
 
     const { data: paginatedMembers, pagination } = useMemo(
@@ -40,26 +44,34 @@ export function TeamMembersTable({
         [members, page],
     );
 
-    const handleRemove = useCallback(
-        async (member: TeamMember) => {
-            if (!window.confirm(`Remove ${member.name} from this team?`)) {
-                return;
-            }
+    const handleRequestRemove = useCallback((member: TeamMember) => {
+        setPendingMember(member);
+    }, []);
 
-            onRemoveStart?.(member.id);
-            const toastId = toast.loading('Removing member...');
+    const handleCloseConfirm = useCallback((open: boolean) => {
+        if (!open) {
+            setPendingMember(null);
+        }
+    }, []);
 
-            try {
-                await removeMember({ teamId: team.id, userId: member.id }).unwrap();
-                toast.success('Member removed', { id: toastId });
-            } catch (error) {
-                toast.error(getApiErrorMessage(error, 'Failed to remove member.'), { id: toastId });
-            } finally {
-                onRemoveEnd?.();
-            }
-        },
-        [onRemoveEnd, onRemoveStart, removeMember, team.id],
-    );
+    const handleConfirmRemove = useCallback(async () => {
+        if (!pendingMember) {
+            return;
+        }
+
+        onRemoveStart?.(pendingMember.id);
+        const toastId = toast.loading('Removing member...');
+
+        try {
+            await removeMember({ teamId: team.id, userId: pendingMember.id }).unwrap();
+            toast.success('Member removed', { id: toastId });
+            setPendingMember(null);
+        } catch (error) {
+            toast.error(getApiErrorMessage(error, 'Failed to remove member.'), { id: toastId });
+        } finally {
+            onRemoveEnd?.();
+        }
+    }, [onRemoveEnd, onRemoveStart, pendingMember, removeMember, team.id]);
 
     const columns = useMemo<DataTableColumn<TeamMember>[]>(() => {
         const baseColumns: DataTableColumn<TeamMember>[] = [
@@ -101,7 +113,7 @@ export function TeamMembersTable({
                             size="icon-sm"
                             aria-label={`Remove ${member.name}`}
                             disabled={!removable || isRemoving}
-                            onClick={() => handleRemove(member)}
+                            onClick={() => handleRequestRemove(member)}
                         >
                             <Trash2 className={isBusy ? 'animate-pulse' : undefined} />
                         </Button>
@@ -109,7 +121,7 @@ export function TeamMembersTable({
                 },
             },
         ];
-    }, [canManageMembers, handleRemove, team, isRemoving, removingUserId]);
+    }, [canManageMembers, handleRequestRemove, isRemoving, removingUserId, team]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -118,11 +130,27 @@ export function TeamMembersTable({
                 data={paginatedMembers}
                 rowKey="id"
                 emptyMessage="No members found."
+                isLoading={isLoading || isRemoving}
             />
             <Pagination
                 pagination={pagination}
                 onPageChange={setPage}
+                isLoading={isLoading || isRemoving}
+            />
+
+            <ConfirmDialog
+                open={pendingMember !== null}
+                onOpenChange={handleCloseConfirm}
+                title="Remove member"
+                description={
+                    pendingMember
+                        ? `Are you sure you want to remove ${pendingMember.name} from ${team.name}?`
+                        : ''
+                }
+                confirmLabel="Remove"
+                onConfirm={handleConfirmRemove}
                 isLoading={isRemoving}
+                destructive
             />
         </div>
     );

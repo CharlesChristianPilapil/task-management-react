@@ -12,7 +12,6 @@ type TeamsTableProps = {
     pagination: PaginationMeta;
     isLoading?: boolean;
     onPageChange: (page: number) => void;
-    onAddTask: (team: Team) => void;
 };
 
 export function TeamsTable({
@@ -20,9 +19,8 @@ export function TeamsTable({
     pagination,
     isLoading,
     onPageChange,
-    onAddTask,
 }: TeamsTableProps) {
-    const columns = useMemo(() => createTeamTableColumns({ onAddTask }), [onAddTask]);
+    const columns = useMemo(() => createTeamTableColumns(), []);
 
     return (
         <div className="flex flex-col gap-4">
@@ -31,6 +29,7 @@ export function TeamsTable({
                 data={teams}
                 rowKey="id"
                 emptyMessage="No teams found."
+                isLoading={isLoading}
             />
             <Pagination
                 pagination={pagination}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,9 +10,11 @@ import { getApiErrorMessage } from '@/features/shared/utils/get-api-error-messag
 import {
     AddMemberDialog,
     TeamMembersTable,
+    canAccessTeamManagement,
+    canManageTeamMembers,
+    canViewTeam,
     useGetTeamQuery,
 } from '@/features/team-management';
-import { canManageTeamMembers } from '@/features/team-management/_utils/team-permissions';
 import { formatDateTime } from '@/features/team-management/_utils/team-display';
 import { useUsers } from '@/features/user-management';
 import useAuth from '@/hooks/useAuth';
@@ -35,24 +37,37 @@ export function TeamDetailPage() {
     const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
     const [removingUserId, setRemovingUserId] = useState<number | null>(null);
 
-    const { data: team, isLoading, error } = useGetTeamQuery(teamId, {
+    const { data: team, isLoading, isFetching, error } = useGetTeamQuery(teamId, {
         skip: !teamId,
     });
     const { users } = useUsers();
 
     const members = team?.members ?? [];
+    const canView = canViewTeam(user, team, members);
     const canManageMembers = canManageTeamMembers(user, team, members);
+    const canManageTeams = canAccessTeamManagement(user);
     const loadError = error ? getApiErrorMessage(error, 'Failed to load team.') : null;
+
+    if (!isLoading && team && user?.role === 'team_member' && !canView) {
+        return <Navigate to={ROUTES.DASHBOARD} replace />;
+    }
 
     return (
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-semibold tracking-tight">Team detail</h1>
-                    <p className="text-sm text-muted-foreground">View team information and members.</p>
+                    <p className="text-sm text-muted-foreground">
+                        {canManageMembers
+                            ? 'View team information and manage members.'
+                            : 'View team information and members.'}
+                    </p>
                 </div>
-                <Button variant="outline" onClick={() => navigate(ROUTES.TEAMS)}>
-                    Back to teams
+                <Button
+                    variant="outline"
+                    onClick={() => navigate(canManageTeams ? ROUTES.TEAMS : ROUTES.DASHBOARD)}
+                >
+                    {canManageTeams ? 'Back to teams' : 'Back to dashboard'}
                 </Button>
             </div>
 
@@ -107,6 +122,7 @@ export function TeamDetailPage() {
                                         removingUserId={removingUserId}
                                         onRemoveStart={setRemovingUserId}
                                         onRemoveEnd={() => setRemovingUserId(null)}
+                                        isLoading={isFetching}
                                     />
                                 </div>
                             </>
@@ -115,7 +131,7 @@ export function TeamDetailPage() {
                 </CardContent>
             </Card>
 
-            {team && (
+            {team && canManageMembers && (
                 <AddMemberDialog
                     open={isAddMemberOpen}
                     team={team}

@@ -1,3 +1,4 @@
+import { Loader2 } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { getNestedValue } from '@/features/shared/utils/get-nested-value';
@@ -17,6 +18,7 @@ export type DataTableProps<T extends object> = {
     rowKey: keyof T | ((row: T) => string | number);
     emptyMessage?: string;
     className?: string;
+    isLoading?: boolean;
 };
 
 function resolveRowKey<T extends object>(
@@ -44,13 +46,20 @@ export function DataTable<T extends object>({
     rowKey,
     emptyMessage = 'No data available.',
     className,
+    isLoading = false,
 }: DataTableProps<T>) {
-    if (data.length === 0) {
+    if (data.length === 0 && !isLoading) {
         return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
     }
 
     return (
-        <div className={cn('overflow-x-auto', className)}>
+        <div className={cn('relative overflow-x-auto', className)}>
+            <div
+                className={cn(
+                    'transition-opacity',
+                    isLoading && 'pointer-events-none opacity-50',
+                )}
+            >
             <table className="w-full text-sm">
                 <thead>
                     <tr className="border-b text-left text-muted-foreground">
@@ -86,6 +95,15 @@ export function DataTable<T extends object>({
                     ))}
                 </tbody>
             </table>
+            </div>
+            {isLoading && (
+                <div
+                    className="absolute inset-0 flex items-center justify-center"
+                    aria-hidden="true"
+                >
+                    <Loader2 className="size-5 animate-spin text-muted-foreground" />
+                </div>
+            )}
         </div>
     );
 }

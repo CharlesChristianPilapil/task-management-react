@@ -9,9 +9,7 @@ export type CreateUserPayload = {
     role: UserRole;
 };
 
-export type UpdateUserPayload = Partial<CreateUserPayload> & {
-    is_active?: boolean;
-};
+export type UpdateUserPayload = Partial<Pick<CreateUserPayload, 'name' | 'email' | 'role'>>;
 
 export type UserListParams = {
     per_page?: number;

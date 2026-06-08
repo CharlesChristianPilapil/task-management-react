@@ -8,9 +8,6 @@ const Dashboard = lazy(() =>
         default: module.DashboardPage,
     })),
 );
-const TasksList = lazy(() =>
-    import('@/pages/tasks/TasksListPage').then((module) => ({ default: module.TasksListPage })),
-);
 const TaskDetail = lazy(() =>
     import('@/pages/tasks/TaskDetailPage').then((module) => ({
         default: module.TaskDetailPage,
@@ -22,6 +19,11 @@ const Teams = lazy(() =>
 const TeamDetail = lazy(() =>
     import('@/pages/teams/TeamDetailPage').then((module) => ({
         default: module.TeamDetailPage,
+    })),
+);
+const TeamTasks = lazy(() =>
+    import('@/pages/teams/TeamTasksPage').then((module) => ({
+        default: module.TeamTasksPage,
     })),
 );
 const Users = lazy(() =>
@@ -46,8 +48,8 @@ export {
     NotFound,
     Settings,
     TaskDetail,
-    TasksList,
     TeamDetail,
+    TeamTasks,
     Teams,
     Users,
 };

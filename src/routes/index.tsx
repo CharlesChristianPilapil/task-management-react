@@ -13,8 +13,8 @@ import {
     NotFound,
     Settings,
     TaskDetail,
-    TasksList,
     TeamDetail,
+    TeamTasks,
     Teams,
     Users,
 } from './LazyPages';
@@ -33,9 +33,9 @@ const IndexRoute = () => {
                     <Route element={<AppLayout />}>
                         <Route index element={<Navigate to={ROUTES.DASHBOARD} replace />} />
                         <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-                        <Route path={ROUTES.TASKS} element={<TasksList />} />
                         <Route path={ROUTES.TASK_DETAIL} element={<TaskDetail />} />
                         <Route path={ROUTES.TEAMS} element={<Teams />} />
+                        <Route path={ROUTES.TEAM_TASKS} element={<TeamTasks />} />
                         <Route path={ROUTES.TEAM_DETAIL} element={<TeamDetail />} />
                         <Route path={ROUTES.USERS} element={<Users />} />
                         <Route path={ROUTES.ANALYTICS} element={<Analytics />} />

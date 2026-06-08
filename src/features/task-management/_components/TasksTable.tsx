@@ -20,6 +20,7 @@ export function TasksTable({ tasks, pagination, isLoading, onPageChange }: Tasks
                 data={tasks}
                 rowKey="id"
                 emptyMessage="No tasks found."
+                isLoading={isLoading}
             />
             <Pagination
                 pagination={pagination}

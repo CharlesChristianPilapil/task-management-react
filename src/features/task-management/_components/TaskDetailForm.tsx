@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { InputField, SelectField, TextareaField } from '@/components/Fields';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import type { TeamMember } from '@/features/team-management';
 
 import type { Task, TaskPriority, TaskStatus } from '../_types';
@@ -55,6 +56,7 @@ export function TaskDetailForm({
     );
     const [status, setStatus] = useState(task.status);
     const [prevTaskStatus, setPrevTaskStatus] = useState(task.status);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     if (task.status !== prevTaskStatus) {
         setPrevTaskStatus(task.status);
@@ -104,12 +106,13 @@ export function TaskDetailForm({
         }
     };
 
-    const handleDelete = async () => {
-        if (!window.confirm('Delete this task?')) {
-            return;
+    const handleConfirmDelete = async () => {
+        try {
+            await onDelete();
+            setIsDeleteDialogOpen(false);
+        } catch {
+            // Keep the dialog open when deletion fails.
         }
-
-        await onDelete();
     };
 
     return (
@@ -214,12 +217,23 @@ export function TaskDetailForm({
                         type="button"
                         variant="destructive"
                         disabled={isBusy}
-                        onClick={handleDelete}
+                        onClick={() => setIsDeleteDialogOpen(true)}
                     >
                         {isDeleting ? 'Deleting...' : 'Delete task'}
                     </Button>
                 )}
             </div>
+
+            <ConfirmDialog
+                open={isDeleteDialogOpen}
+                onOpenChange={setIsDeleteDialogOpen}
+                title="Delete task"
+                description={`Are you sure you want to delete "${task.title}"? This action cannot be undone.`}
+                confirmLabel="Delete"
+                onConfirm={handleConfirmDelete}
+                isLoading={isDeleting}
+                destructive
+            />
         </form>
     );
 }

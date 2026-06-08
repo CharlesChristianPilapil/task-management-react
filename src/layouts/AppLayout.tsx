@@ -5,9 +5,13 @@ import { Button } from '@/components/ui/button';
 import { env } from '@/config/env';
 import { ROUTES } from '@/config/routes';
 import { useLogout } from '@/features/auth';
+import { canAccessTeamManagement } from '@/features/team-management';
+import { canAccessUserManagement } from '@/features/user-management';
+import useAuth from '@/hooks/useAuth';
 
 const AppLayout = () => {
     const { logout, isLoading } = useLogout();
+    const { user } = useAuth();
 
     return (
         <div className="min-h-screen">
@@ -18,9 +22,8 @@ const AppLayout = () => {
                     </span>
                     <ul className="flex items-center gap-4">
                         <Link to={ROUTES.DASHBOARD}>Dashboard</Link>
-                        <Link to={ROUTES.TASKS}>Tasks</Link>
-                        <Link to={ROUTES.TEAMS}>Teams</Link>
-                        <Link to={ROUTES.USERS}>Users</Link>
+                        {canAccessTeamManagement(user) && <Link to={ROUTES.TEAMS}>Teams</Link>}
+                        {canAccessUserManagement(user) && <Link to={ROUTES.USERS}>Users</Link>}
                         <Link to={ROUTES.ANALYTICS}>Analytics</Link>
                         <Link to={ROUTES.SETTINGS}>Settings</Link>
                         <li>

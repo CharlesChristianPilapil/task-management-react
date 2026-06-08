@@ -1,17 +1,18 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ROUTES } from '@/config/routes';
 import { SectionState } from '@/features/dashboard';
 import {
-    AddTaskDialog,
     AddTeamDialog,
     TeamsTable,
-    useGetTeamQuery,
+    canAccessTeamManagement,
     useTeamsList,
-    type Team,
 } from '@/features/team-management';
+import useAuth from '@/hooks/useAuth';
 
 function TeamsTableSkeleton() {
     return (
@@ -30,21 +31,14 @@ function TeamsTableSkeleton() {
 }
 
 export function TeamsPage() {
+    const { user } = useAuth();
+    const canManageTeams = canAccessTeamManagement(user);
     const { teams, pagination, isLoading, isFetching, error, setPage } = useTeamsList();
-    const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
     const [isAddTeamOpen, setIsAddTeamOpen] = useState(false);
 
-    const { data: selectedTeamDetails } = useGetTeamQuery(selectedTeam?.id ?? 0, {
-        skip: !selectedTeam,
-    });
-
-    const handleAddTask = useCallback((team: Team) => {
-        setSelectedTeam(team);
-    }, []);
-
-    const handleCloseTaskDialog = useCallback(() => {
-        setSelectedTeam(null);
-    }, []);
+    if (!canManageTeams) {
+        return <Navigate to={ROUTES.DASHBOARD} replace />;
+    }
 
     return (
         <div className="flex flex-col gap-6">
@@ -64,7 +58,7 @@ export function TeamsPage() {
                 <CardHeader>
                     <CardTitle>Team list</CardTitle>
                     <CardDescription>
-                        Use actions to view a team or add a task.
+                        Use actions to view a team or its tasks.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -80,20 +74,12 @@ export function TeamsPage() {
                             pagination={pagination}
                             isLoading={isFetching}
                             onPageChange={setPage}
-                            onAddTask={handleAddTask}
                         />
                     </SectionState>
                 </CardContent>
             </Card>
 
             <AddTeamDialog open={isAddTeamOpen} onClose={() => setIsAddTeamOpen(false)} />
-
-            <AddTaskDialog
-                open={selectedTeam !== null}
-                team={selectedTeam}
-                members={selectedTeamDetails?.members ?? []}
-                onClose={handleCloseTaskDialog}
-            />
         </div>
     );
 }

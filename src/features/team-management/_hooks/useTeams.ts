@@ -1,45 +1,21 @@
-import { useEffect, useState } from 'react';
-
 import { getApiErrorMessage } from '@/features/shared/utils/get-api-error-message';
+import useAuth from '@/hooks/useAuth';
 
-import { teamService } from '../_service';
-import type { Team } from '../_types';
+import { useListTeamsQuery } from '../_service';
+import { canAccessTeamManagement } from '../_utils/team-permissions';
 
 export function useTeams() {
-    const [teams, setTeams] = useState<Team[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { user } = useAuth();
+    const canListTeams = canAccessTeamManagement(user);
 
-    useEffect(() => {
-        let cancelled = false;
+    const { data, isLoading, isFetching, error } = useListTeamsQuery(
+        { per_page: 100 },
+        { skip: !canListTeams },
+    );
 
-        const fetchTeams = async () => {
-            setIsLoading(true);
-            setError(null);
-
-            try {
-                const { teams: data } = await teamService.list({ per_page: 100 });
-                if (!cancelled) {
-                    setTeams(data);
-                }
-            } catch (err) {
-                if (!cancelled) {
-                    setError(getApiErrorMessage(err, 'Failed to load teams.'));
-                    setTeams([]);
-                }
-            } finally {
-                if (!cancelled) {
-                    setIsLoading(false);
-                }
-            }
-        };
-
-        fetchTeams();
-
-        return () => {
-            cancelled = true;
-        };
-    }, []);
-
-    return { teams, isLoading, error };
+    return {
+        teams: data?.teams ?? [],
+        isLoading: canListTeams ? isLoading || isFetching : false,
+        error: canListTeams && error ? getApiErrorMessage(error, 'Failed to load teams.') : null,
+    };
 }
