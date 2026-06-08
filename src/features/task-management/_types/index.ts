@@ -1,1 +1,1 @@
-export type { Task, TaskPriority, TaskStatus } from './task.types';
+export type { Task, TaskListParams, TaskListResult, TaskPriority, TaskStatus } from './task.types';

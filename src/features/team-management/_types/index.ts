@@ -1,1 +1,1 @@
-export type { Team, TeamMember } from './team.types';
+export type { Team, TeamListParams, TeamListResult, TeamMember } from './team.types';

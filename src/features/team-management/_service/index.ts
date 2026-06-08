@@ -1,1 +1,8 @@
-export { teamService } from './team.service';
+export {
+    teamService,
+    useAddTeamMemberMutation,
+    useCreateTeamMutation,
+    useGetTeamQuery,
+    useListTeamsQuery,
+    useRemoveTeamMemberMutation,
+} from './team.service';

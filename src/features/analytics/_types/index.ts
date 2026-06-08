@@ -1,1 +1,7 @@
-export type { AnalyticsSummary, TeamProductivity, UpcomingDeadline } from './analytics.types';
+export type {
+    AnalyticsSummary,
+    MemberProductivity,
+    TeamProductivity,
+    UpcomingDeadlineTask,
+    UpcomingDeadlines,
+} from './analytics.types';

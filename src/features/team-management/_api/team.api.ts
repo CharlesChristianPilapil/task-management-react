@@ -1,19 +1,19 @@
 import { laravelClient } from '@/features/shared/api';
-import type { ApiResponse } from '@/features/shared/types';
+import type { ApiResponse, PaginatedData } from '@/features/shared/types';
 import type { Team, TeamMember } from '../_types';
 
 export const teamApi = {
-    list: () => laravelClient.get<ApiResponse<Team[]>>('/teams'),
+    list: (params?: import('../_types').TeamListParams) =>
+        laravelClient.get<ApiResponse<PaginatedData<Team, 'teams'>>>('/teams', { params }),
 
-    get: (teamId: number) => laravelClient.get<ApiResponse<Team>>(`/teams/${teamId}`),
+    get: (teamId: number) => laravelClient.get<ApiResponse<Team & { members?: TeamMember[] }>>(`/teams/${teamId}`),
 
-    create: (payload: Pick<Team, 'name' | 'description'>) =>
-        laravelClient.post<ApiResponse<Team>>('/teams', payload),
+    create: (payload: Pick<Team, 'name'>) => laravelClient.post<ApiResponse<Team>>('/teams', payload),
 
-    addMember: (teamId: number, userId: number) =>
-        laravelClient.post<ApiResponse<TeamMember>>(`/teams/${teamId}/members`, {
-            user_id: userId,
-        }),
+    addMember: (
+        teamId: number,
+        payload: { user_id: number; role?: 'member' | 'lead' },
+    ) => laravelClient.post<ApiResponse<Team>>(`/teams/${teamId}/members`, payload),
 
     removeMember: (teamId: number, userId: number) =>
         laravelClient.delete<ApiResponse<null>>(`/teams/${teamId}/members/${userId}`),

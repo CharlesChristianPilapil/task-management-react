@@ -14,6 +14,7 @@ import {
     Settings,
     TaskDetail,
     TasksList,
+    TeamDetail,
     Teams,
     Users,
 } from './LazyPages';
@@ -35,6 +36,7 @@ const IndexRoute = () => {
                         <Route path={ROUTES.TASKS} element={<TasksList />} />
                         <Route path={ROUTES.TASK_DETAIL} element={<TaskDetail />} />
                         <Route path={ROUTES.TEAMS} element={<Teams />} />
+                        <Route path={ROUTES.TEAM_DETAIL} element={<TeamDetail />} />
                         <Route path={ROUTES.USERS} element={<Users />} />
                         <Route path={ROUTES.ANALYTICS} element={<Analytics />} />
                         <Route path={ROUTES.SETTINGS} element={<Settings />} />

@@ -1,1 +1,1 @@
-export { authService } from './auth.service';
+export { authService, useLoginMutation, useMeQuery, useLogoutMutation } from './auth.service';

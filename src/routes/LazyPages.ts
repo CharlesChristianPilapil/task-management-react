@@ -19,6 +19,11 @@ const TaskDetail = lazy(() =>
 const Teams = lazy(() =>
     import('@/pages/teams/TeamsPage').then((module) => ({ default: module.TeamsPage })),
 );
+const TeamDetail = lazy(() =>
+    import('@/pages/teams/TeamDetailPage').then((module) => ({
+        default: module.TeamDetailPage,
+    })),
+);
 const Users = lazy(() =>
     import('@/pages/users/UsersPage').then((module) => ({ default: module.UsersPage })),
 );
@@ -42,6 +47,7 @@ export {
     Settings,
     TaskDetail,
     TasksList,
+    TeamDetail,
     Teams,
     Users,
 };

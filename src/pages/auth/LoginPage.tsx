@@ -12,9 +12,10 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { env } from '@/config/env';
-import { LOGIN_SCHEMA, type LoginFormValues } from '@/features/auth';
+import { LOGIN_SCHEMA, useLogin, type LoginFormValues } from '@/features/auth';
 
 export function LoginPage() {
+    const { login, isLoading } = useLogin();
     const {
         register,
         handleSubmit,
@@ -28,7 +29,7 @@ export function LoginPage() {
     });
 
     const onSubmit = (data: LoginFormValues) => {
-        console.log(data);
+        login(data);
     };
 
     return (
@@ -42,30 +43,32 @@ export function LoginPage() {
                 </CardHeader>
 
                 <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <CardContent className="flex flex-col gap-4">
-                        <InputField
-                            label="Email"
-                            type="email"
-                            autoComplete="email"
-                            placeholder="you@example.com"
-                            error={errors.email?.message}
-                            {...register('email')}
-                        />
+                    <fieldset disabled={isLoading}>
+                        <CardContent className="flex flex-col gap-4">
+                            <InputField
+                                label="Email"
+                                type="email"
+                                autoComplete="email"
+                                placeholder="you@example.com"
+                                error={errors.email?.message}
+                                {...register('email')}
+                            />
 
-                        <PasswordField
-                            label="Password"
-                            autoComplete="current-password"
-                            placeholder="Enter your password"
-                            error={errors.password?.message}
-                            {...register('password')}
-                        />
-                    </CardContent>
+                            <PasswordField
+                                label="Password"
+                                autoComplete="current-password"
+                                placeholder="Enter your password"
+                                error={errors.password?.message}
+                                {...register('password')}
+                            />
+                        </CardContent>
 
-                    <CardFooter className="border-t-0 bg-transparent">
-                        <Button type="submit" className="w-full">
-                            Sign in
-                        </Button>
-                    </CardFooter>
+                        <CardFooter className="border-t-0 bg-transparent">
+                            <Button type="submit" className="w-full">
+                                {isLoading ? 'Signing in...' : 'Sign in'}
+                            </Button>
+                        </CardFooter>
+                    </fieldset>
                 </form>
             </Card>
         </div>

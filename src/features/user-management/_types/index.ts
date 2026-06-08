@@ -1,1 +1,8 @@
-export type { CreateUserPayload, UpdateUserPayload, User, UserRole } from './user.types';
+export type {
+    CreateUserPayload,
+    UpdateUserPayload,
+    User,
+    UserListParams,
+    UserListResult,
+    UserRole,
+} from './user.types';

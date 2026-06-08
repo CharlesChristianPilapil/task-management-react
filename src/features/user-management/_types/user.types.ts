@@ -12,3 +12,15 @@ export type CreateUserPayload = {
 export type UpdateUserPayload = Partial<CreateUserPayload> & {
     is_active?: boolean;
 };
+
+export type UserListParams = {
+    per_page?: number;
+    page?: number;
+    role?: UserRole;
+    status?: 'active' | 'inactive';
+};
+
+export type UserListResult = {
+    users: User[];
+    pagination: import('@/features/shared/types').PaginationMeta;
+};

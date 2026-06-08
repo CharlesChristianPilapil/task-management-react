@@ -2,19 +2,37 @@ export type AnalyticsSummary = {
     total_tasks: number;
     completed_tasks: number;
     pending_tasks: number;
-    in_progress_tasks: number;
+    avg_completion_time: number | null;
+};
+
+export type MemberProductivity = {
+    user_id: number | null;
+    name: string;
+    task_count: number;
+    completed_count: number;
+    completion_rate: number;
+    avg_completion_time: number | null;
 };
 
 export type TeamProductivity = {
     team_id: number;
-    completion_rate: number;
-    tasks_completed: number;
-    tasks_total: number;
+    members: MemberProductivity[];
 };
 
-export type UpcomingDeadline = {
-    task_id: number;
+export type UpcomingDeadlineTask = {
+    id: number;
     title: string;
+    status: string;
+    priority: string;
     due_date: string;
-    assigned_to: number | null;
+};
+
+export type UpcomingDeadlines = {
+    team_id: number;
+    window_days: number;
+    members: {
+        user_id: number | null;
+        name: string;
+        tasks: UpcomingDeadlineTask[];
+    }[];
 };

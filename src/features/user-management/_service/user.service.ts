@@ -1,8 +1,12 @@
 import { userApi } from '../_api';
-import type { CreateUserPayload, UpdateUserPayload } from '../_types';
+import type { CreateUserPayload, UpdateUserPayload, UserListParams, UserListResult } from '../_types';
 
 export const userService = {
-    list: () => userApi.list().then((res) => res.data.data),
+    list: (params?: UserListParams): Promise<UserListResult> =>
+        userApi.list(params).then((res) => ({
+            users: res.data.data.users,
+            pagination: res.data.data.pagination,
+        })),
 
     get: (userId: number) => userApi.get(userId).then((res) => res.data.data),
 

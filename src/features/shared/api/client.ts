@@ -5,6 +5,7 @@ import { storage } from '@/features/shared/utils/storage';
 function createApiClient(baseURL: string) {
     const client = axios.create({
         baseURL,
+        timeout: 60_000,
         headers: { 'Content-Type': 'application/json' },
     });
 

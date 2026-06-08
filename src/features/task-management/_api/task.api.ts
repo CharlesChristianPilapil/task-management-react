@@ -1,10 +1,15 @@
 import { laravelClient } from '@/features/shared/api';
-import type { ApiResponse } from '@/features/shared/types';
-import type { Task } from '../_types';
+import type { ApiResponse, PaginatedData } from '@/features/shared/types';
+import type { Task, TaskListParams } from '../_types';
 
 export const taskApi = {
-    list: (teamId: number, params?: Record<string, string | number>) =>
-        laravelClient.get<ApiResponse<Task[]>>(`/teams/${teamId}/tasks`, { params }),
+    myTasks: (params?: TaskListParams) =>
+        laravelClient.get<ApiResponse<PaginatedData<Task, 'tasks'>>>('/tasks/mine', { params }),
+
+    list: (teamId: number, params?: TaskListParams) =>
+        laravelClient.get<ApiResponse<PaginatedData<Task, 'tasks'>>>(`/teams/${teamId}/tasks`, {
+            params,
+        }),
 
     get: (taskId: number) => laravelClient.get<ApiResponse<Task>>(`/tasks/${taskId}`),
 
