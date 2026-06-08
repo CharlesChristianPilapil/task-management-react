@@ -1,0 +1,40 @@
+---
+description: Axios clients, Laravel vs Node endpoints, error handling
+globs: src/**/*.{tsx,ts}
+alwaysApply: false
+---
+
+# API Integration
+
+## Two axios instances
+
+```ts
+// laravelApi — baseURL: import.meta.env.VITE_LARAVEL_API_URL
+// nodeApi    — baseURL: import.meta.env.VITE_NODE_API_URL
+// Both: Authorization: Bearer <token>, Accept: application/json
+```
+
+## Laravel endpoints (primary)
+
+| Area | Methods |
+|------|---------|
+| Auth | `POST /auth/login`, `POST /auth/register`, `GET /auth/me`, `POST /auth/logout` |
+| Users | `GET/POST /users`, `GET/PATCH /users/:id`, `PATCH /users/:id/status` |
+| Teams | `GET/POST /teams`, `GET /teams/:id`, `POST/DELETE /teams/:id/members/:userId` |
+| Tasks | `GET/POST /teams/:teamId/tasks`, `GET/PATCH/DELETE /tasks/:id`, `PATCH /tasks/:id/status` |
+
+## Node endpoints (admin/manager only)
+
+| Method | Path |
+|--------|------|
+| GET | `/analytics/task-summary?team_id=&date_from=&date_to=` |
+| GET | `/analytics/team-productivity?team_id=` |
+| GET | `/analytics/upcoming-deadlines?team_id=` |
+| POST | `/export/tasks` — body: `{ team_id, format, filters }` |
+
+## Error handling
+
+- 401 → clear auth, redirect login
+- 403 → toast: permission denied
+- 422 → show `errors` from response
+- Loading states on all async actions; use toast for success/error
