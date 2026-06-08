@@ -9,8 +9,20 @@ Frontend for the Task Management & Analytics Platform. A **React 19 / TypeScript
 
 ---
 
+## Live URLs
+
+| Service | URL |
+|---------|-----|
+| **React Frontend (this repo)** | [https://task-management-react-exam-1gnmeomqi.vercel.app](https://task-management-react-exam-1gnmeomqi.vercel.app) |
+| **Dashboard** | [https://task-management-react-exam-1gnmeomqi.vercel.app/dashboard](https://task-management-react-exam-1gnmeomqi.vercel.app/dashboard) |
+| **Laravel API** | [https://task-management-laravel-api-u2v9.onrender.com/api](https://task-management-laravel-api-u2v9.onrender.com/api) |
+| **Node.js Services** | [https://task-management-node-services-g5ie.onrender.com/api](https://task-management-node-services-g5ie.onrender.com/api) |
+
+---
+
 ## Table of Contents
 
+- [Live URLs](#live-urls)
 - [Quick Start](#quick-start)
 - [Environment Variables](#environment-variables)
 - [Project Structure](#project-structure)
@@ -59,7 +71,13 @@ Open [http://localhost:5173](http://localhost:5173). Vite proxies `/api` to Lara
 | `VITE_NODE_API_URL` | Node service base URL (include `/api`) | `/node-api` |
 | `VITE_APP_NAME` | App title in header / browser tab | `Task Management` |
 
-Production URLs are commented in `.env.example`.
+Production values (live app on Vercel) are commented in [`.env.example`](.env.example).
+
+| Variable | Production value |
+|----------|------------------|
+| `VITE_LARAVEL_API_URL` | `https://task-management-laravel-api-u2v9.onrender.com/api` |
+| `VITE_NODE_API_URL` | `https://task-management-node-services-g5ie.onrender.com/api` |
+| `VITE_APP_NAME` | `Task Management` |
 
 ---
 
