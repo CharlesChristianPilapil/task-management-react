@@ -4,7 +4,12 @@ import { analyticsService } from '../_service';
 import type { AnalyticsSummary } from '../_types';
 import { getAnalyticsErrorMessage } from '../_utils/get-analytics-error';
 
-export function useTaskSummary(teamId: number | null, enabled = true) {
+export function useTaskSummary(
+    teamId: number | null,
+    enabled = true,
+    dateFrom?: string,
+    dateTo?: string,
+) {
     const [summary, setSummary] = useState<AnalyticsSummary | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -23,7 +28,7 @@ export function useTaskSummary(teamId: number | null, enabled = true) {
             setError(null);
 
             try {
-                const data = await analyticsService.taskSummary(teamId);
+                const data = await analyticsService.taskSummary(teamId, dateFrom, dateTo);
                 if (!cancelled) {
                     setSummary(data);
                 }
@@ -44,7 +49,7 @@ export function useTaskSummary(teamId: number | null, enabled = true) {
         return () => {
             cancelled = true;
         };
-    }, [teamId, enabled]);
+    }, [teamId, enabled, dateFrom, dateTo]);
 
     return { summary, isLoading, error };
 }

@@ -4,6 +4,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { env } from '@/config/env';
 import { ROUTES } from '@/config/routes';
+import { canAccessAnalytics } from '@/features/analytics';
 import { useLogout } from '@/features/auth';
 import { canAccessTeamManagement } from '@/features/team-management';
 import { canAccessUserManagement } from '@/features/user-management';
@@ -24,7 +25,7 @@ const AppLayout = () => {
                         <Link to={ROUTES.DASHBOARD}>Dashboard</Link>
                         {canAccessTeamManagement(user) && <Link to={ROUTES.TEAMS}>Teams</Link>}
                         {canAccessUserManagement(user) && <Link to={ROUTES.USERS}>Users</Link>}
-                        <Link to={ROUTES.ANALYTICS}>Analytics</Link>
+                        {canAccessAnalytics(user) && <Link to={ROUTES.ANALYTICS}>Analytics</Link>}
                         <Link to={ROUTES.SETTINGS}>Settings</Link>
                         <li>
                             <Button

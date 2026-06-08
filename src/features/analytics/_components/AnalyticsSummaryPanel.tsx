@@ -1,28 +1,23 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { canAccessAnalytics, useTaskSummary } from '@/features/analytics';
-import useAuth from '@/hooks/useAuth';
+import { AnalyticsGridSkeleton } from '@/features/dashboard/_components/DashboardSkeletons';
+import { SectionState } from '@/features/dashboard';
 
-import { AnalyticsGridSkeleton } from './DashboardSkeletons';
-import { SectionState } from './SectionState';
+import { useTaskSummary } from '../_hooks/useTaskSummary';
 
-type TaskSummaryPanelProps = {
+type AnalyticsSummaryPanelProps = {
     teamId: number | null;
+    dateFrom?: string;
+    dateTo?: string;
 };
 
-export function TaskSummaryPanel({ teamId }: TaskSummaryPanelProps) {
-    const { user } = useAuth();
-    const canViewAnalytics = canAccessAnalytics(user);
-    const { summary, isLoading, error } = useTaskSummary(teamId, canViewAnalytics);
-
-    if (!canViewAnalytics) {
-        return null;
-    }
+export function AnalyticsSummaryPanel({ teamId, dateFrom, dateTo }: AnalyticsSummaryPanelProps) {
+    const { summary, isLoading, error } = useTaskSummary(teamId, true, dateFrom, dateTo);
 
     return (
         <Card>
             <CardHeader>
                 <CardTitle>Task summary</CardTitle>
-                <CardDescription>Analytics overview from the reporting service.</CardDescription>
+                <CardDescription>Completion metrics for the selected team and date range.</CardDescription>
             </CardHeader>
             <CardContent>
                 <SectionState

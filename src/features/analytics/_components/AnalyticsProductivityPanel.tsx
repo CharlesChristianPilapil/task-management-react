@@ -1,14 +1,15 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import type { MemberProductivity } from '@/features/analytics';
-import { canAccessAnalytics, useTeamProductivity } from '@/features/analytics';
-import useAuth from '@/hooks/useAuth';
+import { ProductivityTableSkeleton } from '@/features/dashboard/_components/DashboardSkeletons';
+import { SectionState } from '@/features/dashboard';
+import { formatCompletionRate } from '@/features/dashboard/_utils/task-display';
 
-import { formatCompletionRate } from '../_utils/task-display';
-import { ProductivityTableSkeleton } from './DashboardSkeletons';
-import { SectionState } from './SectionState';
+import type { MemberProductivity } from '../_types';
+import { useTeamProductivity } from '../_hooks/useTeamProductivity';
 
-type TeamProductivityPanelProps = {
+type AnalyticsProductivityPanelProps = {
     teamId: number | null;
+    dateFrom?: string;
+    dateTo?: string;
 };
 
 function ProductivityTable({ members }: { members: MemberProductivity[] }) {
@@ -20,7 +21,8 @@ function ProductivityTable({ members }: { members: MemberProductivity[] }) {
                         <th className="pb-2 pr-4 font-medium">Member</th>
                         <th className="pb-2 pr-4 font-medium">Tasks</th>
                         <th className="pb-2 pr-4 font-medium">Completed</th>
-                        <th className="pb-2 font-medium">Rate</th>
+                        <th className="pb-2 pr-4 font-medium">Rate</th>
+                        <th className="pb-2 font-medium">Avg. time</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,7 +31,12 @@ function ProductivityTable({ members }: { members: MemberProductivity[] }) {
                             <td className="py-2 pr-4">{member.name}</td>
                             <td className="py-2 pr-4">{member.task_count}</td>
                             <td className="py-2 pr-4">{member.completed_count}</td>
-                            <td className="py-2">{formatCompletionRate(member.completion_rate)}</td>
+                            <td className="py-2 pr-4">{formatCompletionRate(member.completion_rate)}</td>
+                            <td className="py-2">
+                                {member.avg_completion_time !== null
+                                    ? `${member.avg_completion_time.toFixed(1)}h`
+                                    : '—'}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -38,20 +45,23 @@ function ProductivityTable({ members }: { members: MemberProductivity[] }) {
     );
 }
 
-export function TeamProductivityPanel({ teamId }: TeamProductivityPanelProps) {
-    const { user } = useAuth();
-    const canViewAnalytics = canAccessAnalytics(user);
-    const { productivity, isLoading, error } = useTeamProductivity(teamId, canViewAnalytics);
-
-    if (!canViewAnalytics) {
-        return null;
-    }
+export function AnalyticsProductivityPanel({
+    teamId,
+    dateFrom,
+    dateTo,
+}: AnalyticsProductivityPanelProps) {
+    const { productivity, isLoading, error } = useTeamProductivity(
+        teamId,
+        true,
+        dateFrom,
+        dateTo,
+    );
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Member productivity</CardTitle>
-                <CardDescription>Per-member completion rates from analytics.</CardDescription>
+                <CardTitle>Team productivity</CardTitle>
+                <CardDescription>Per-member task counts, completion rates, and average time.</CardDescription>
             </CardHeader>
             <CardContent>
                 <SectionState

@@ -1,6 +1,6 @@
 import { getApiErrorMessage } from '@/features/shared/utils/get-api-error-message';
 
-import { useListUsersQuery } from '../_service/user.service';
+import { useListUsersQuery } from '../_service';
 
 export function useUsers() {
     const { data, isLoading, error } = useListUsersQuery({ per_page: 100 });

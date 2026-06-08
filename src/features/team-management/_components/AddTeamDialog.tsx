@@ -8,7 +8,7 @@ import { Dialog } from '@/components/ui/dialog';
 import { handleFormApiError } from '@/features/shared/utils/apply-api-errors-to-form';
 
 import { CREATE_TEAM_SCHEMA, type CreateTeamFormValues } from '../_schema/index.schema';
-import { useCreateTeamMutation } from '../_service/team.service';
+import { useCreateTeamMutation } from '../_service';
 
 type AddTeamDialogProps = {
     open: boolean;

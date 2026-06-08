@@ -8,7 +8,7 @@ import type { User } from '@/features/auth';
 import type { PaginationMeta } from '@/features/shared/types';
 import { getApiErrorMessage } from '@/features/shared/utils/get-api-error-message';
 
-import { useToggleUserStatusMutation } from '../_service/user.service';
+import { useToggleUserStatusMutation } from '../_service';
 import { createUserTableColumns } from '../_utils/user-table-columns';
 
 type UsersTableProps = {

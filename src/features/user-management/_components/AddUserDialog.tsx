@@ -9,7 +9,7 @@ import type { User } from '@/features/auth';
 import { handleFormApiError } from '@/features/shared/utils/apply-api-errors-to-form';
 
 import { CREATE_USER_SCHEMA, type CreateUserFormValues } from '../_schema/index.schema';
-import { useCreateUserMutation } from '../_service/user.service';
+import { useCreateUserMutation } from '../_service';
 import { getAssignableRoles, USER_ROLE_LABELS } from '../_utils';
 
 type AddUserDialogProps = {

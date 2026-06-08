@@ -9,7 +9,7 @@ import type { User } from '@/features/auth';
 import { getApiErrorMessage } from '@/features/shared/utils/get-api-error-message';
 
 import { ADD_MEMBER_SCHEMA, type AddMemberFormValues } from '../_schema/index.schema';
-import { useAddTeamMemberMutation } from '../_service/team.service';
+import { useAddTeamMemberMutation } from '../_service';
 import type { Team, TeamMember } from '../_types';
 
 type AddMemberDialogProps = {

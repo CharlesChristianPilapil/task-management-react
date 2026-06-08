@@ -10,7 +10,7 @@ import { Pagination } from '@/components/ui/pagination';
 import { paginateArray } from '@/features/shared/utils/paginate-array';
 import { getApiErrorMessage } from '@/features/shared/utils/get-api-error-message';
 
-import { useRemoveTeamMemberMutation } from '../_service/team.service';
+import { useRemoveTeamMemberMutation } from '../_service';
 import type { Team, TeamMember } from '../_types';
 import { canRemoveMember } from '../_utils/team-permissions';
 

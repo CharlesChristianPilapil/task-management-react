@@ -1,1 +1,3 @@
-export { useSettings } from './useSettings';
+export function useSettings() {
+    return { isLoading: false };
+}

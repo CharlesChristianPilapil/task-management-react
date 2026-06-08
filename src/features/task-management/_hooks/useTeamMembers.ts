@@ -1,5 +1,5 @@
 import { getApiErrorMessage } from '@/features/shared/utils/get-api-error-message';
-import { useGetTeamQuery } from '@/features/team-management/_service/team.service';
+import { useGetTeamQuery } from '@/features/team-management/_service';
 
 export function useTeamMembers(teamId: number | null) {
     const { data, isLoading, isFetching, error } = useGetTeamQuery(teamId ?? 0, {

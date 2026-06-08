@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import type { PaginationMeta } from '@/features/shared/types';
 import { getApiErrorMessage } from '@/features/shared/utils/get-api-error-message';
 
-import { useListUsersQuery } from '../_service/user.service';
+import { useListUsersQuery } from '../_service';
 import type { UserListParams } from '../_types';
 
 const DEFAULT_PER_PAGE = 10;

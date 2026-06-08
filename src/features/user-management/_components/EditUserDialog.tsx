@@ -10,7 +10,7 @@ import type { User } from '@/features/auth';
 import { handleFormApiError } from '@/features/shared/utils/apply-api-errors-to-form';
 
 import { UPDATE_USER_SCHEMA, type UpdateUserFormValues } from '../_schema/index.schema';
-import { useUpdateUserMutation } from '../_service/user.service';
+import { useUpdateUserMutation } from '../_service';
 import { getAssignableRoles, USER_ROLE_LABELS } from '../_utils';
 
 type EditUserDialogProps = {
