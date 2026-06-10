@@ -13,8 +13,8 @@ Frontend for the Task Management & Analytics Platform. A **React 19 / TypeScript
 
 | Service | URL |
 |---------|-----|
-| **React Frontend (this repo)** | [https://task-management-react-exam-1gnmeomqi.vercel.app](https://task-management-react-exam-1gnmeomqi.vercel.app) |
-| **Dashboard** | [https://task-management-react-exam-1gnmeomqi.vercel.app/dashboard](https://task-management-react-exam-1gnmeomqi.vercel.app/dashboard) |
+| **React Frontend (this repo)** | [https://task-management-react-exam.vercel.app](https://task-management-react-exam.vercel.app) |
+| **Dashboard** | [https://task-management-react-exam.vercel.app](https://task-management-react-exam.vercel.app/dashboard) |
 | **Laravel API** | [https://task-management-laravel-api-u2v9.onrender.com/api](https://task-management-laravel-api-u2v9.onrender.com/api) |
 | **Node.js Services** | [https://task-management-node-services-g5ie.onrender.com/api](https://task-management-node-services-g5ie.onrender.com/api) |
 
